@@ -3,6 +3,7 @@ import os
 import sys
 from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
+from langchain_Ollama import ChatOllama
 
 
 load_dotenv()
@@ -44,8 +45,12 @@ Musk's political activities, views, and statements have made him a polarizing fi
 
     # llm = ChatOllama(temperature=0, model="gemma3:270m")
     # Pass the API key explicitly (also read from env) to avoid OpenAI client errors
-    llm = ChatOpenAI(openai_api_key=OPENAI_API_KEY, temperature=0, model="gpt-5")
+    ## llm = ChatOpenAI(openai_api_key=OPENAI_API_KEY, temperature=0, model="gpt-5")
+    llm = ChatOllama(temperature=0, model="gemma3:270m")
+
     chain = summary_prompt_template | llm
+
+
 
     response = chain.invoke(input={"information": information})
     print(response.content)
