@@ -1,9 +1,21 @@
 from dotenv import load_dotenv
+import os
+import sys
 from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
 
 
 load_dotenv()
+
+# Ensure the OpenAI API key is provided to avoid runtime OpenAI errors.
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    print(
+        "ERROR: OPENAI_API_KEY is not set.\n"
+        "Set it in a .env file (create .env from .env.example) or export it in your shell.\n"
+        "Example .env: OPENAI_API_KEY=sk-...\n"
+    )
+    sys.exit(1)
 
 
 def main():
@@ -31,7 +43,8 @@ Musk's political activities, views, and statements have made him a polarizing fi
     )
 
     # llm = ChatOllama(temperature=0, model="gemma3:270m")
-    llm = ChatOpenAI(temperature=0, model="gpt-5")
+    # Pass the API key explicitly (also read from env) to avoid OpenAI client errors
+    llm = ChatOpenAI(openai_api_key=OPENAI_API_KEY, temperature=0, model="gpt-5")
     chain = summary_prompt_template | llm
 
     response = chain.invoke(input={"information": information})
